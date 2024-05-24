@@ -127,16 +127,14 @@ app.get("/", async (req, res) => {
     const errorLogColumn = 27;
     const errorStackLogColumn = 28;
     logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn);
-    const now = new Date(Date.now());
-    const hoursNow = now.getHours().toString().padStart(2, '0');
-    const timestamp = new Date().toISOString();
-    const formattedTimestamp = timestamp.replace(/T\d\d/, `T${hoursNow}`).replace("T", " T ");
+    const now = moment().tz('America/Sao_Paulo');
+    const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
 
     console.log(`! ! ! ! ! ERRO NO BLOCO CATCH DA RESPOSTA À SOLICITAÇÃO`);
     console.log(`==> ${formattedTimestamp} => ${error.message} // ${error.stack.replace(/\n/g, "   ||   ").replace(/\s\s\s\s/g, "")}`)
   }
 });
 
-app.listen(1337, (req, res) => {
-  console.log("running on port 1337")
+app.listen(3000, (req, res) => {
+  console.log("running on port 3000")
 });

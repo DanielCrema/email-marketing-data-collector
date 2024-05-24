@@ -1,3 +1,5 @@
+const moment = require('moment-timezone');
+
 function generateUpdateRequest(auth, spreadsheetId, row, column, value, range) {
     try {
         if (range === "") {
@@ -17,10 +19,8 @@ function generateUpdateRequest(auth, spreadsheetId, row, column, value, range) {
 
         return updateRequest;
     } catch (error) {
-        const now = new Date(Date.now());
-        const hoursNow = now.getHours().toString().padStart(2, '0');
-        const timestamp = new Date().toISOString();
-        const formattedTimestamp = timestamp.replace(/T\d\d/, `T${hoursNow}`).replace("T", " T ");
+        const now = moment().tz('America/Sao_Paulo');
+        const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
 
         console.log(`!!! ERRO NA FUNÇÃO GENERATEUPDATEREQUEST`);
         console.log(`==> ${formattedTimestamp} => ${error.message} // ${error.stack.replace(/\n/g, "   ||   ").replace(/\s\s\s\s/g, "")}`)

@@ -1,3 +1,4 @@
+const moment = require('moment-timezone');
 const generateUpdateRequest = require("./generateUpdateRequest");
 
 async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn) {
@@ -13,10 +14,8 @@ async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTi
       row = data.length + 1;
     }
 
-    const now = new Date(Date.now());
-    const hoursNow = now.getHours().toString().padStart(2, '0');
-    const timestamp = new Date().toISOString();
-    const formattedTimestamp = timestamp.replace(/T\d\d/, `T${hoursNow}`).replace("T", " T ");
+    const now = moment().tz('America/Sao_Paulo');
+    const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
     const formattedStack = error.stack.replace(/\n/g, "   ||   ").replace(/\s\s\s\s/g, "");
 
 
@@ -29,11 +28,8 @@ async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTi
     await googleSheets.spreadsheets.values.update(errorLogRequest);
     await googleSheets.spreadsheets.values.update(errorStackLogRequest);
   } catch (error) {
-    const now = new Date(Date.now());
-    const hoursNow = now.getHours().toString().padStart(2, '0');
-    const timestamp = new Date().toISOString();
-    const formattedTimestamp = timestamp.replace(/T\d\d/, `T${hoursNow}`).replace("T", " T ");
-
+    const now = moment().tz('America/Sao_Paulo');
+    const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
     console.log(`! ! ! ERRO NA FUNÇÃO LOGERRORS`);
     console.log(`==> ${formattedTimestamp} => ${error.message} // ${error.stack.replace(/\n/g, "   ||   ").replace(/\s\s\s\s/g, "")}`)
   }

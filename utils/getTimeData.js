@@ -1,12 +1,14 @@
+const moment = require('moment-timezone');
+
 async function getTimeData() {
     try {
-        const now = new Date(Date.now());
+        const now = moment().tz('America/Sao_Paulo'); // Get the current time in the specified timezone
 
-        const year = now.getFullYear();
-        const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based, so add 1
-        const day = now.getDate().toString().padStart(2, '0');
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const year = now.format('YYYY');
+        const month = now.format('MM');
+        const day = now.format('DD');
+        const hours = now.format('HH');
+        const minutes = now.format('mm');
 
         // Format the timestamp as DD-MM-YYYY / HH:MM h
         const formattedDate = `${day}-${month}-${year} / ${hours}:${minutes}h`;
