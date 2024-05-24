@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const { google } = require("googleapis");
 const app = express();
@@ -29,7 +30,7 @@ app.get("/", async (req, res) => {
   // Instance of Google Sheets API
   const googleSheets = google.sheets({ version: "v4", auth: client })
 
-  const spreadsheetId = "1gdwUecq7QsRioFeJYzT1f2y9jONv89flvjTyiMBi8-4";
+  const spreadsheetId = process.env.GOOGLE_SPREED_SHEET_ID;
 
   // Get metadata about spreadsheet
   // const metaData = await googleSheets.spreadsheets.get({
