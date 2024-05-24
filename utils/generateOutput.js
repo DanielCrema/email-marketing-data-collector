@@ -30,7 +30,7 @@ function generateOutput(validatedSource, redirectUrl, event) {
                             });
                             setTimeout(function() {
                                 button.click();
-                            }, 200);
+                            }, 100);
                         }
                         window.onload = createButton;
                     </script>
