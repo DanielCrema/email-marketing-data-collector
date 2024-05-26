@@ -9,7 +9,8 @@ function generateOutput(validatedSource, redirectUrl, event) {
         } else {
             const output = {
                 redirect: true,
-                output: `    <!DOCTYPE html>
+                output: `
+                <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
@@ -21,23 +22,16 @@ function generateOutput(validatedSource, redirectUrl, event) {
                     }
                     </style>
                     <script>
-                        function createButton() {
-                            const button = document.createElement("button");
-                            button.classList.add("hidden");
-                            document.body.appendChild(button);
-                            button.addEventListener("click", function() {
-                                window.location.href = "${redirectUrl}";
-                            });
-                            setTimeout(function() {
-                                button.click();
-                            }, 100);
-                        }
-                        window.onload = createButton;
+                        window.onload = function() {
+                            document.getElementById("redirectButton").click();
+                        };
                     </script>
                 </head>
                 <body>
+                    <button id="redirectButton" class="hidden" onclick="window.location.href='${redirectUrl}'"></button>
                 </body>
-                </html>`
+                </html>
+                `
             }
             return output;
         }
