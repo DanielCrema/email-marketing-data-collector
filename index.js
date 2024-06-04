@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const { google } = require("googleapis");
 const app = express();
+const port = process.env.PORT || 4000;
 
 const validateSource = require('./utils/validateSource');
 const getRedirectUrl = require('./utils/getRedirectUrl');
@@ -135,6 +136,6 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.listen(3000, (req, res) => {
-  console.log("running on port 3000")
+app.listen(port, (req, res) => {
+  console.log("running on port ", port)
 });
