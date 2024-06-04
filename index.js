@@ -71,7 +71,7 @@ app.get("/", async (req, res) => {
             const emailSentColumn = 4;
             const totalEventCountColumn = 6;
             const securityCopyColumn = 14;
-            const metricsColumn = 17;
+            const metricsColumn = 18;
             const metricsRows = {
               apresentacao: 11,
               whatsapp: 12,
@@ -92,9 +92,9 @@ app.get("/", async (req, res) => {
               await logEvents(googleSheets, auth, spreadsheetId, data, row, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate);
               const logConfirmed = await confirmLog(googleSheets, auth, spreadsheetId, row, eventColumn, minutes);
               if (!logConfirmed) {
-                const errorTimestampColumn = 26;
-                const errorLogColumn = 27;
-                const errorStackLogColumn = 28;
+                const errorTimestampColumn = 27;
+                const errorLogColumn = 28;
+                const errorStackLogColumn = 29;
 
                 const error = {
                   message: `! ! ! Failed to log an event`,
@@ -108,9 +108,9 @@ app.get("/", async (req, res) => {
           }
         }
       } catch (error) {
-        const errorTimestampColumn = 26;
-        const errorLogColumn = 27;
-        const errorStackLogColumn = 28;
+        const errorTimestampColumn = 27;
+        const errorLogColumn = 28;
+        const errorStackLogColumn = 29;
         logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn);
       }
     }
@@ -123,9 +123,9 @@ app.get("/", async (req, res) => {
     const output = await main();
     res.send(output.output);
   } catch (error) {
-    const errorTimestampColumn = 26;
-    const errorLogColumn = 27;
-    const errorStackLogColumn = 28;
+    const errorTimestampColumn = 27;
+    const errorLogColumn = 28;
+    const errorStackLogColumn = 29;
     logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn);
     const now = moment().tz('America/Sao_Paulo');
     const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');

@@ -59,13 +59,13 @@ class codec {
 }
 
 // Example usage:
-const cryptographer = new codec();
-const email = "radiomulher@radiomulher.com";
-const encodedEmail = cryptographer.encode(email);
-console.log(`Email original: ${email}`);
-console.log(`Encoded: ${encodedEmail}`);
+// const cryptographer = new codec();
+// const email = "example@host.com";
+// const encodedEmail = cryptographer.encode(email);
+// console.log(`Email original: ${email}`);
+// console.log(`Encoded: ${encodedEmail}`);
 
-const decodedEmail = cryptographer.decode(encodedEmail);
-console.log(`Decoded: ${decodedEmail}`);
+// const decodedEmail = cryptographer.decode(encodedEmail);
+// console.log(`Decoded: ${decodedEmail}`);
 
 module.exports = codec;
