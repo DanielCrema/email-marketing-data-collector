@@ -2,6 +2,7 @@ const generateUpdateRequest = require('./generateUpdateRequest');
 
 async function logEvents(googleSheets, auth, spreadsheetId, data, row, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate) {
     try {
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         eventColumn = eventColumn - 1;
         totalEventCountColumn = totalEventCountColumn - 1;
         metricsColumn = metricsColumn - 1;
@@ -15,8 +16,11 @@ async function logEvents(googleSheets, auth, spreadsheetId, data, row, eventColu
         const metricsUpdateRequest = generateUpdateRequest(auth, spreadsheetId, `${metricsRow + 1}`, metricsColumn, `${eventMetrics}`, "");
 
         await googleSheets.spreadsheets.values.update(eventUpdateRequest);
+        await delay(300);
         await googleSheets.spreadsheets.values.update(totalEventsUpdateRequest);
+        await delay(300);
         await googleSheets.spreadsheets.values.update(metricsUpdateRequest);
+        await delay(300);
     } catch (error) {
         throw error
     }
