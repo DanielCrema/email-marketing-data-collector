@@ -1,11 +1,14 @@
+const codec = require('./codec');
+const decoder = new codec();
+
 async function fetchParameters(req) {
   try {
     let email = "";
     let event = "";
-    const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/g;
-    const queryEmailTest = emailRegex.test(req.query.email)
+    const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@\W]+/g;
+    const queryEmailTest = emailRegex.test(decoder.decode(req.query.ticket))
     if (queryEmailTest) {
-      email = req.query.email
+      email = decoder.decode(req.query.ticket)
     }
     if (req.query.apresentacao) {
       event = "Apresentacao"
