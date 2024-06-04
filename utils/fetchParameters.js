@@ -6,8 +6,8 @@ async function fetchParameters(req) {
     let email = "";
     let event = "";
     const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@\W]+/g;
-    const encodedQueryTicket = req.query.ticket;
-    if (encodedQueryTicket) {
+    if (req.query.ticket) {
+      const encodedQueryTicket = req.query.ticket;
       const decodedQueryTicket = decoder.decode(encodedQueryTicket);
       const queryEmailTest = emailRegex.test(decodedQueryTicket);
       if (queryEmailTest) {
