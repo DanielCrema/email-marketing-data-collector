@@ -34,9 +34,8 @@ async function fetchParameters(req) {
       if (req.query.tiktok) {
         event = "Tiktok"
       }
-
-      return { email, event }
     }
+    return { email, event }
   } catch (error) {
     throw error
   }
