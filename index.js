@@ -51,7 +51,7 @@ app.get("/", async (req, res) => {
 
   async function main() {
     const validatedSource = await validateSource(req);
-    const { email, event } = await fetchParameters(req);
+    const { email, event, missingButtonsAtEmail } = await fetchParameters(req);
     let redirectUrl;
 
     if (validatedSource === true) {
@@ -60,43 +60,45 @@ app.get("/", async (req, res) => {
 
         if (redirectUrl !== "" && event != "") {
 
-          const columnApresentacao = 7;
-          const columnWhatsapp = 8;
-          const columnYoutube = 9;
-          const columnSpotify = 10;
-          const columnFacebook = 11;
-          const columnInstagram = 12;
-          const columnTiktok = 13;
+          const columnSite = 7;
+          const columnApresentacao = 8;
+          const columnWhatsapp = 9;
+          const columnYoutube = 10;
+          const columnSpotify = 11;
+          const columnFacebook = 12;
+          const columnInstagram = 13;
+          const columnTiktok = 14;
 
           if (email !== "") {
             const emailColumn = 3;
             const emailSentColumn = 4;
             const totalEventCountColumn = 6;
-            const securityCopyColumn = 14;
-            const metricsColumn = 18;
+            const securityCopyColumn = 15;
+            const metricsColumn = 19;
             const metricsRows = {
-              apresentacao: 11,
-              whatsapp: 12,
-              youtube: 13,
-              spotify: 14,
-              facebook: 15,
-              instagram: 16,
-              tiktok: 17,
+              site: 11,
+              apresentacao: 12,
+              whatsapp: 13,
+              youtube: 14,
+              spotify: 15,
+              facebook: 16,
+              instagram: 17,
+              tiktok: 18,
             }
 
             const row = await validateAndLogEmail(googleSheets, auth, spreadsheetId, data, email, emailColumn, securityCopyColumn);
-            const { eventColumn, metricsRow } = await handleParameters(event, metricsRows, columnApresentacao, columnWhatsapp, columnYoutube, columnSpotify, columnFacebook, columnInstagram, columnTiktok);
+            const { eventColumn, metricsRow, missingButtonsColumns } = await handleParameters(event, metricsRows, missingButtonsAtEmail, columnSite, columnApresentacao, columnWhatsapp, columnYoutube, columnSpotify, columnFacebook, columnInstagram, columnTiktok);
             const { formattedDate, year, month, day, hours, minutes } = await getTimeData();
             const validatedTimeout = await timeoutCheck(data, row, eventColumn, year, month, day, hours, minutes);
             const validatedEmailSent = await validateEmailSent(data, row, emailSentColumn);
             if (validatedEmailSent && validatedTimeout) {
               const { eventCounter, totalCounter } = await validateCellContent(data, row, eventColumn, totalEventCountColumn);
-              await logEvents(googleSheets, auth, spreadsheetId, data, row, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate);
+              await logEvents(googleSheets, auth, spreadsheetId, data, row, missingButtonsColumns, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate);
               const logConfirmed = await confirmLog(googleSheets, auth, spreadsheetId, row, eventColumn, minutes);
               if (!logConfirmed) {
-                const errorTimestampColumn = 27;
-                const errorLogColumn = 28;
-                const errorStackLogColumn = 29;
+                const errorTimestampColumn = 28;
+                const errorLogColumn = 29;
+                const errorStackLogColumn = 30;
 
                 const error = {
                   message: `! ! ! Failed to log an event`,
@@ -110,9 +112,9 @@ app.get("/", async (req, res) => {
           }
         }
       } catch (error) {
-        const errorTimestampColumn = 27;
-        const errorLogColumn = 28;
-        const errorStackLogColumn = 29;
+        const errorTimestampColumn = 28;
+        const errorLogColumn = 29;
+        const errorStackLogColumn = 30;
         logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn);
       }
     }
@@ -125,9 +127,9 @@ app.get("/", async (req, res) => {
     const output = await main();
     res.send(output.output);
   } catch (error) {
-    const errorTimestampColumn = 27;
-    const errorLogColumn = 28;
-    const errorStackLogColumn = 29;
+    const errorTimestampColumn = 28;
+    const errorLogColumn = 29;
+    const errorStackLogColumn = 30;
     logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn);
     const now = moment().tz('America/Sao_Paulo');
     const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');

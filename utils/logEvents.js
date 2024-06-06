@@ -1,6 +1,6 @@
 const generateUpdateRequest = require('./generateUpdateRequest');
 
-async function logEvents(googleSheets, auth, spreadsheetId, data, row, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate) {
+async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingButtonsColumns, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate) {
     try {
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         eventColumn = eventColumn - 1;
@@ -21,6 +21,14 @@ async function logEvents(googleSheets, auth, spreadsheetId, data, row, eventColu
         await delay(300);
         await googleSheets.spreadsheets.values.update(metricsUpdateRequest);
         await delay(300);
+
+        if (missingButtonsColumns) {
+            missingButtonsColumns.forEach(async (column) => {
+                const missingButtonUpdateRequest = generateUpdateRequest(auth, spreadsheetId, row, column, "NÃO ENVIADO NO EMAIL", "");
+                await googleSheets.spreadsheets.values.update(missingButtonUpdateRequest);
+                await delay(300);
+            });
+        };
     } catch (error) {
         throw error
     }

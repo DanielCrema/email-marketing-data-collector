@@ -4,6 +4,7 @@ const generateUpdateRequest = require('./generateUpdateRequest');
 
 async function validateAndLogEmail(googleSheets, auth, spreadsheetId, data, email, emailColumn, securityCopyColumn) {
   try {
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     emailColumn = emailColumn - 1;
     securityCopyColumn = securityCopyColumn - 1;
     let { emailFound, rowIndex } = findEmailInSheet(data, email, emailColumn, securityCopyColumn);
@@ -15,6 +16,7 @@ async function validateAndLogEmail(googleSheets, auth, spreadsheetId, data, emai
     const securityCopyUpdateRequest = generateUpdateRequest(auth, spreadsheetId, rowIndex, securityCopyColumn, email, "");
     googleSheets.spreadsheets.values.update(emailUpdateRequest);
     googleSheets.spreadsheets.values.update(securityCopyUpdateRequest);
+    await delay(600);
 
     return rowIndex
   } catch (error) {

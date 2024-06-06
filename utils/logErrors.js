@@ -21,9 +21,9 @@ async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTi
 
 
     // Log the errors
-    const errorTimestampLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedTimestamp, `Sheet1!AA${row}`);
-    const errorLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, error.message, `Sheet1!AB${row}`);
-    const errorStackLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedStack, `Sheet1!AC${row}`);
+    const errorTimestampLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedTimestamp, `Sheet1!AB${row}`);
+    const errorLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, error.message, `Sheet1!AC${row}`);
+    const errorStackLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedStack, `Sheet1!AD${row}`);
 
     await googleSheets.spreadsheets.values.update(errorTimestampLogRequest);
     await delay(300);
