@@ -24,6 +24,7 @@ async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingBu
 
         if (missingButtonsColumns) {
             missingButtonsColumns.forEach(async (column) => {
+                column = column - 1;
                 const missingButtonUpdateRequest = generateUpdateRequest(auth, spreadsheetId, row, column, "NÃO ENVIADO NO EMAIL", "");
                 await googleSheets.spreadsheets.values.update(missingButtonUpdateRequest);
                 await delay(300);
