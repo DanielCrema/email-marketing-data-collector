@@ -74,6 +74,7 @@ app.get("/", async (req, res) => {
             const emailSentColumn = 4;
             const totalEventCountColumn = 6;
             const securityCopyColumn = 15;
+            const ticketColumn = 16;
             const metricsColumn = 19;
             const metricsRows = {
               site: 11,
@@ -86,7 +87,7 @@ app.get("/", async (req, res) => {
               tiktok: 18,
             }
 
-            const row = await validateAndLogEmail(googleSheets, auth, spreadsheetId, data, email, emailColumn, securityCopyColumn);
+            const row = await validateAndLogEmail(googleSheets, auth, spreadsheetId, data, email, emailColumn, securityCopyColumn, ticketColumn, req.query.ticket);
             const { eventColumn, metricsRow, missingButtonsColumns } = await handleParameters(event, metricsRows, missingButtonsAtEmail, columnSite, columnApresentacao, columnWhatsapp, columnYoutube, columnSpotify, columnFacebook, columnInstagram, columnTiktok);
             const { formattedDate, year, month, day, hours, minutes } = await getTimeData();
             const validatedTimeout = await timeoutCheck(data, row, eventColumn, year, month, day, hours, minutes);

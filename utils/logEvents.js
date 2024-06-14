@@ -1,4 +1,4 @@
-const generateUpdateRequest = require('./generateUpdateRequest');
+const generateBatchUpdateRequest = require('./generateBatchUpdateRequest');
 
 async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingButtonsColumns, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate) {
     try {
@@ -11,25 +11,22 @@ async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingBu
         const eventMetricsLog = data[metricsRow][metricsColumn];
         const eventMetrics = parseInt(eventMetricsLog) + 1;
 
-        const eventUpdateRequest = generateUpdateRequest(auth, spreadsheetId, row, eventColumn, `Aberto ${eventCounter}x : ${formattedDate}`, "");
-        const totalEventsUpdateRequest = generateUpdateRequest(auth, spreadsheetId, row, totalEventCountColumn, `Total Eventos ${totalCounter}x - Última ação: ${formattedDate}`, "");
-        const metricsUpdateRequest = generateUpdateRequest(auth, spreadsheetId, `${metricsRow + 1}`, metricsColumn, `${eventMetrics}`, "");
-
-        await googleSheets.spreadsheets.values.update(eventUpdateRequest);
-        await delay(300);
-        await googleSheets.spreadsheets.values.update(totalEventsUpdateRequest);
-        await delay(300);
-        await googleSheets.spreadsheets.values.update(metricsUpdateRequest);
-        await delay(300);
+        const updates = [
+            { row, column: eventColumn, value: `Aberto ${eventCounter}x : ${formattedDate}` },
+            { row, column: totalEventCountColumn, value: `Total Eventos ${totalCounter}x - Última ação: ${formattedDate}` },
+            { row: metricsRow + 1, column: metricsColumn, value: `${eventMetrics}` }
+        ];
 
         if (missingButtonsColumns) {
-            missingButtonsColumns.forEach(async (column) => {
+            missingButtonsColumns.forEach((column) => {
                 column = column - 1;
-                const missingButtonUpdateRequest = generateUpdateRequest(auth, spreadsheetId, row, column, "NÃO ENVIADO NO EMAIL", "");
-                await googleSheets.spreadsheets.values.update(missingButtonUpdateRequest);
-                await delay(300);
+                updates.push({ row, column, value: "NÃO ENVIADO NO EMAIL" });
             });
-        };
+        }
+
+        const batchUpdateRequest = generateBatchUpdateRequest(auth, spreadsheetId, updates);
+        await googleSheets.spreadsheets.values.batchUpdate(batchUpdateRequest);
+        await delay(1100)
     } catch (error) {
         throw error
     }

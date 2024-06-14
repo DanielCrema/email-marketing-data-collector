@@ -1,5 +1,5 @@
 const moment = require('moment-timezone');
-const generateUpdateRequest = require("./generateUpdateRequest");
+const generateBatchUpdateRequest = require("./generateBatchUpdateRequest");
 
 async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTimestampColumn, errorLogColumn, errorStackLogColumn) {
   try {
@@ -19,18 +19,16 @@ async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTi
     const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
     const formattedStack = error.stack.replace(/\n/g, "   ||   ").replace(/\s\s\s\s/g, "");
 
-
     // Log the errors
-    const errorTimestampLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedTimestamp, `Sheet1!AB${row}`);
-    const errorLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, error.message, `Sheet1!AC${row}`);
-    const errorStackLogRequest = generateUpdateRequest(auth, spreadsheetId, row, errorTimestampColumn, formattedStack, `Sheet1!AD${row}`);
+    const updates = [
+      { row, column: errorTimestampColumn, value: formattedTimestamp, range: `Sheet1!AB${row}` },
+      { row, column: errorTimestampColumn, value: error.message, range: `Sheet1!AC${row}` },
+      { row, column: errorTimestampColumn, value: formattedStack, range: `Sheet1!AD${row}` }
+    ]
 
-    await googleSheets.spreadsheets.values.update(errorTimestampLogRequest);
-    await delay(300);
-    await googleSheets.spreadsheets.values.update(errorLogRequest);
-    await delay(300);
-    await googleSheets.spreadsheets.values.update(errorStackLogRequest);
-    await delay(300);
+    const batchUpdateRequest = generateBatchUpdateRequest(auth, spreadsheetId, updates);
+    await googleSheets.spreadsheets.values.batchUpdate(batchUpdateRequest);
+    await delay(1100);
   } catch (error) {
     const now = moment().tz('America/Sao_Paulo');
     const formattedTimestamp = now.format('DD-MM-YYYY || HH:mm:ss.SSS');
