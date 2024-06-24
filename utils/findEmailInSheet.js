@@ -1,5 +1,6 @@
 function findEmailInSheet(data, email, emailColumn, securityCopyColumn) {
   try {
+    email = new RegExp(email);
     let emailFound = false;
     let rowIndex = -1;
 
