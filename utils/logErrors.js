@@ -22,8 +22,8 @@ async function logErrors(googleSheets, auth, spreadsheetId, data, error, errorTi
     // Log the errors
     const updates = [
       { row, column: errorTimestampColumn, value: formattedTimestamp, range: `Sheet1!AB${row}` },
-      { row, column: errorTimestampColumn, value: error.message, range: `Sheet1!AC${row}` },
-      { row, column: errorTimestampColumn, value: formattedStack, range: `Sheet1!AD${row}` }
+      { row, column: errorLogColumn, value: error.message, range: `Sheet1!AC${row}` },
+      { row, column: errorStackLogColumn, value: formattedStack, range: `Sheet1!AD${row}` }
     ]
 
     const batchUpdateRequest = generateBatchUpdateRequest(auth, spreadsheetId, updates);
