@@ -2,6 +2,7 @@ const generateBatchUpdateRequest = require('./generateBatchUpdateRequest');
 
 async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingButtonsColumns, eventColumn, totalEventCountColumn, eventCounter, totalCounter, metricsRow, metricsColumn, formattedDate) {
     try {
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         eventColumn = eventColumn - 1;
         totalEventCountColumn = totalEventCountColumn - 1;
         metricsColumn = metricsColumn - 1;
@@ -24,25 +25,8 @@ async function logEvents(googleSheets, auth, spreadsheetId, data, row, missingBu
         }
 
         const batchUpdateRequest = generateBatchUpdateRequest(auth, spreadsheetId, updates);
-
-        // Implementing exponential backoff strategy
-        let retryCount = 0;
-        const maxTries = 4;
-        const initialDelay = 250;
-
-        while (retryCount < maxTries) {
-            try {
-                await googleSheets.spreadsheets.values.batchUpdate(batchUpdateRequest);
-                break; // If the request succeeds, break out of the loop
-            } catch (error) {
-                if (retryCount === maxTries - 1) {
-                    throw error; // If it's the last retry, throw the error
-                }
-                retryCount++;
-                const delay = initialDelay * Math.pow(2, retryCount); // Exponential backoff
-                await new Promise(resolve => setTimeout(resolve, delay));
-            }
-        }
+        await googleSheets.spreadsheets.values.batchUpdate(batchUpdateRequest);
+        await delay(1100)
     } catch (error) {
         throw error
     }
